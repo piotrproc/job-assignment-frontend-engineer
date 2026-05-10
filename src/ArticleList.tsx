@@ -1,6 +1,24 @@
 import AppLayout from "./AppLayout";
+import { useEffect, useState } from "react";
+import { apiClient } from "./api/client";
+import { Article } from "./api/types";
+import { formatPublicationDate, getAuthorImage } from "./utils/articlePresentation";
 
 export default function ArticleList() {
+  const [articles, setArticles] = useState<Article[]>([]);
+
+  useEffect(() => {
+    apiClient
+      .getArticles()
+      .then(response => {
+        console.log(response.articles);
+        setArticles(response.articles);
+      })
+      .catch((error: unknown) => {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <>
       <AppLayout activeNav="home">
@@ -30,49 +48,30 @@ export default function ArticleList() {
                   </ul>
                 </div>
 
-                <div className="article-preview">
-                  <div className="article-meta">
-                    <a href="/#/profile/ericsimmons">
-                      <img src="http://i.imgur.com/Qr71crq.jpg" />
-                    </a>
-                    <div className="info">
-                      <a href="/#/profile/ericsimmons" className="author">
-                        Eric Simons
-                      </a>
-                      <span className="date">January 20th</span>
-                    </div>
-                    <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                      <i className="ion-heart" /> 29
-                    </button>
-                  </div>
-                  <a href="/#/how-to-build-webapps-that-scale" className="preview-link">
-                    <h1>How to build webapps that scale</h1>
-                    <p>This is the description for the post.</p>
-                    <span>Read more...</span>
-                  </a>
-                </div>
-
-                <div className="article-preview">
-                  <div className="article-meta">
-                    <a href="/#/profile/albertpai">
-                      <img src="http://i.imgur.com/N4VcUeJ.jpg" />
-                    </a>
-                    <div className="info">
-                      <a href="/#/profile/albertpai" className="author">
-                        Albert Pai
-                      </a>
-                      <span className="date">January 20th</span>
-                    </div>
-                    <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                      <i className="ion-heart" /> 32
-                    </button>
-                  </div>
-                  <a href="/#/the-song-you-wont-ever-stop-singing" className="preview-link">
-                    <h1>The song you won&lsquo;t ever stop singing. No matter how hard you try.</h1>
-                    <p>This is the description for the post.</p>
-                    <span>Read more...</span>
-                  </a>
-                </div>
+                {articles.length > 0 &&
+                  articles.map(article => (
+                      <div className="article-preview" key={article.slug}>
+                        <div className="article-meta">
+                          <a href={`/#/profile/${article.author.username}`}>
+                            <img src={getAuthorImage(article.author.image ?? null)} alt={article.author.username} />
+                          </a>
+                          <div className="info">
+                            <a href={`/#/profile/${article.author.username}`} className="author">
+                              {article.author.username}
+                            </a>
+                            <span className="date">{formatPublicationDate(article.createdAt)}</span>
+                          </div>
+                          <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                            <i className="ion-heart" /> {article.favoritesCount}
+                          </button>
+                        </div>
+                        <a href={`/#/${article.slug}`} className="preview-link">
+                          <h1>{article.title}</h1>
+                          <p>{article.description}</p>
+                          <span>Read more...</span>
+                        </a>
+                      </div>
+                  ))}
               </div>
 
               <div className="col-md-3">
