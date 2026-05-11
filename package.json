@@ -45,18 +45,11 @@
     "lint-staged": "11.2.3",
     "prettier": "2.4.1"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ],
   "lint-staged": {
     "*.{ts,tsx}": "eslint --cache --fix"
   }
