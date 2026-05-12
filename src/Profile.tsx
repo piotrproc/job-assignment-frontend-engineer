@@ -1,6 +1,38 @@
 import AppLayout from "./AppLayout";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { apiClient } from "./api/client";
+import { Article, ProfileType } from "./api/types";
+import { formatPublicationDate, getAuthorImage } from "./utils/articlePresentation";
 
 export default function Profile() {
+  const { username } = useParams<{ username: string }>();
+
+  const [profile, setProfile] = useState<ProfileType | null>(null);
+  const [articles, setArticles] = useState<Article[] | null>([]);
+
+  useEffect(() => {
+
+    apiClient.getProfile(username).then(
+      (response) => {
+        console.log(response.profile);
+        setProfile(response.profile);
+      }
+    );
+
+  },[]);
+
+  useEffect(() => {
+    apiClient.getArticles({
+      limit: 20,
+      offset: 0,
+      author: username
+    }).then((response) => {
+      setArticles(response.articles);
+      console.log(response.articles);
+    })
+  }, []);
+
   return (
     <>
       <AppLayout activeNav="home">
@@ -9,15 +41,12 @@ export default function Profile() {
             <div className="container">
               <div className="row">
                 <div className="col-xs-12 col-md-10 offset-md-1">
-                  <img src="http://i.imgur.com/Qr71crq.jpg" className="user-img" />
-                  <h4>Eric Simons</h4>
-                  <p>
-                    Cofounder @GoThinkster, lived in Aol&lsquo;s HQ for a few months, kinda looks like Peeta from the
-                    Hunger Games
-                  </p>
+                  <img src={getAuthorImage(profile?.image ?? null)} className="user-img" alt={profile?.username}/>
+                  <h4>{profile?.username}</h4>
+                  <p>{profile?.bio ?? "No bio available."}</p>
                   <button className="btn btn-sm btn-outline-secondary action-btn">
                     <i className="ion-plus-round" />
-                    &nbsp; Follow Eric Simons
+                    &nbsp; {profile?.following ? "Following" : "Follow"} {profile?.username}
                   </button>
                 </div>
               </div>
@@ -42,53 +71,38 @@ export default function Profile() {
                   </ul>
                 </div>
 
-                <div className="article-preview">
-                  <div className="article-meta">
-                    <a href="/#/profile/ericsimmons">
-                      <img src="http://i.imgur.com/Qr71crq.jpg" />
-                    </a>
-                    <div className="info">
-                      <a href="/#/profile/ericsimmons" className="author">
-                        Eric Simons
+                {articles ? articles.map(article => (
+                  <div className="article-preview" key={article.slug}>
+                    <div className="article-meta">
+                      <a href="/#/profile/albertpai">
+                        <img src={getAuthorImage(article?.author.image ?? null)} />
                       </a>
-                      <span className="date">January 20th</span>
+                      <div className="info">
+                        <a href={`/#/profile/${article.author.username}`} className="author">
+                          {article.author.username}
+                        </a>
+                        <span className="date">{formatPublicationDate(article.createdAt)}</span>
+                      </div>
+                      <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                        <i className="ion-heart" /> {article.favoritesCount}
+                      </button>
                     </div>
-                    <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                      <i className="ion-heart" /> 29
-                    </button>
-                  </div>
-                  <a href="/#/how-to-build-webapps-that-scale" className="preview-link">
-                    <h1>How to build webapps that scale</h1>
-                    <p>This is the description for the post.</p>
-                    <span>Read more...</span>
-                  </a>
-                </div>
-
-                <div className="article-preview">
-                  <div className="article-meta">
-                    <a href="/#/profile/albertpai">
-                      <img src="http://i.imgur.com/N4VcUeJ.jpg" />
+                    <a href={`/#/${article.slug}`} className="preview-link">
+                      <h1>{article.title}</h1>
+                      <p>{article.description}</p>
+                      <span>Read more...</span>
+                      {article.tagList.length > 0 && (
+                        <ul className="tag-list">
+                          {article.tagList.map(tag => (
+                            <li className="tag-default tag-pill tag-outline" key={`${article.slug}-${tag}`}>
+                              {tag}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </a>
-                    <div className="info">
-                      <a href="/#/profile/albertpai" className="author">
-                        Albert Pai
-                      </a>
-                      <span className="date">January 20th</span>
-                    </div>
-                    <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                      <i className="ion-heart" /> 32
-                    </button>
                   </div>
-                  <a href="/#/the-song-you-wont-ever-stop-singing" className="preview-link">
-                    <h1>The song you won&lsquo;t ever stop singing. No matter how hard you try.</h1>
-                    <p>This is the description for the post.</p>
-                    <span>Read more...</span>
-                    <ul className="tag-list">
-                      <li className="tag-default tag-pill tag-outline">Music</li>
-                      <li className="tag-default tag-pill tag-outline">Song</li>
-                    </ul>
-                  </a>
-                </div>
+                )) : ""}
               </div>
             </div>
           </div>

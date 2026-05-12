@@ -1,4 +1,4 @@
-export interface Profile {
+export interface ProfileType {
   username: string;
   bio: string | null;
   image: string | null;
@@ -15,11 +15,24 @@ export interface Article {
   updatedAt: string;
   favorited: boolean;
   favoritesCount: number;
-  author: Profile;
+  author: ProfileType;
 }
 
 export interface MultipleArticlesResponse {
   articles: Article[];
   articlesCount: number;
 }
+
+export interface SingleProfileResponse {
+  profile: ProfileType;
+}
+
+export interface ArticlesQuery {
+  tag?: string;
+  author?: string;
+  favorited?: string;
+  limit?: number;
+  offset?: number;
+}
+
 
