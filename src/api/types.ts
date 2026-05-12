@@ -5,7 +5,7 @@ export interface ProfileType {
   following: boolean;
 }
 
-export interface Article {
+export interface ArticleType {
   slug: string;
   title: string;
   description: string;
@@ -19,8 +19,12 @@ export interface Article {
 }
 
 export interface MultipleArticlesResponse {
-  articles: Article[];
+  articles: ArticleType[];
   articlesCount: number;
+}
+
+export interface SingleArticleResponse {
+  article: ArticleType;
 }
 
 export interface SingleProfileResponse {

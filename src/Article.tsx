@@ -1,69 +1,74 @@
 import AppLayout from "./AppLayout";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { apiClient } from "./api/client";
+import { ArticleType } from "./api/types";
+import { formatPublicationDate, getAuthorImage } from "./utils/articlePresentation";
 
 export default function Article() {
+  const { slug } = useParams<{ slug: string }>();
+
+  const [article, setArticle] = useState<ArticleType>();
+
+  console.log(slug);
+
+  useEffect(() => {
+    apiClient.getArticle(slug).then(response => {
+      setArticle(response.article);
+    });
+  }, [slug]);
+
+  const profileHref = `/#/profile/${article?.author.username}`;
+
+  const renderArticleMeta = () => {
+    return (
+      <div className="article-meta">
+        <a href="/#/profile/ericsimmons">
+          <img src={getAuthorImage(article?.author.image ?? null)} alt={article?.author.username} />
+        </a>
+        <div className="info">
+          <a href={profileHref} className="author">
+            {article?.author.username}
+          </a>
+          <span className="date">{formatPublicationDate(article ? article.createdAt : "")}</span>
+        </div>
+        <button className="btn btn-sm btn-outline-secondary">
+          <i className="ion-plus-round" />
+          &nbsp; {article?.author.following ? "Following" : "Follow"} {article?.author.username}
+        </button>
+        &nbsp;&nbsp;
+        <button className="btn btn-sm btn-outline-primary">
+          <i className="ion-heart" />
+          &nbsp; Favorite Post <span className="counter">({article?.favoritesCount})</span>
+        </button>
+      </div>
+    );
+  };
+
   return (
     <>
       <AppLayout activeNav="home">
         <div className="article-page">
           <div className="banner">
             <div className="container">
-              <h1>How to build webapps that scale</h1>
-
-              <div className="article-meta">
-                <a href="/#/profile/ericsimmons">
-                  <img src="http://i.imgur.com/Qr71crq.jpg" />
-                </a>
-                <div className="info">
-                  <a href="/#/profile/ericsimmons" className="author">
-                    Eric Simons
-                  </a>
-                  <span className="date">January 20th</span>
-                </div>
-                <button className="btn btn-sm btn-outline-secondary">
-                  <i className="ion-plus-round" />
-                  &nbsp; Follow Eric Simons <span className="counter">(10)</span>
-                </button>
-                &nbsp;&nbsp;
-                <button className="btn btn-sm btn-outline-primary">
-                  <i className="ion-heart" />
-                  &nbsp; Favorite Post <span className="counter">(29)</span>
-                </button>
-              </div>
+              <h1>{article?.title}</h1>
+              {renderArticleMeta()}
             </div>
           </div>
 
           <div className="container page">
             <div className="row article-content">
               <div className="col-md-12">
-                <p>Web development technologies have evolved at an incredible clip over the past few years.</p>
-                <h2 id="introducing-ionic">Introducing RealWorld.</h2>
-                <p>It&lsquo;s a great solution for learning how other frameworks work.</p>
+                {article?.body.split("\n").map((paragraph, index) => (
+                  <p key={`${article?.slug}-${index}`}>{paragraph}</p>
+                ))}
               </div>
             </div>
 
             <hr />
 
             <div className="article-actions">
-              <div className="article-meta">
-                <a href="/#/profile/ericsimmons">
-                  <img src="http://i.imgur.com/Qr71crq.jpg" />
-                </a>
-                <div className="info">
-                  <a href="/#/profile/ericsimmons" className="author">
-                    Eric Simons
-                  </a>
-                  <span className="date">January 20th</span>
-                </div>
-                <button className="btn btn-sm btn-outline-secondary">
-                  <i className="ion-plus-round" />
-                  &nbsp; Follow Eric Simons
-                </button>
-                &nbsp;
-                <button className="btn btn-sm btn-outline-primary">
-                  <i className="ion-heart" />
-                  &nbsp; Favorite Post <span className="counter">(29)</span>
-                </button>
-              </div>
+              {renderArticleMeta()}
             </div>
 
             <div className="row">

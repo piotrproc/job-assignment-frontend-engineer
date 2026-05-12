@@ -2,14 +2,14 @@ import AppLayout from "./AppLayout";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { apiClient } from "./api/client";
-import { Article, ProfileType } from "./api/types";
+import { ArticleType, ProfileType } from "./api/types";
 import { formatPublicationDate, getAuthorImage } from "./utils/articlePresentation";
 
 export default function Profile() {
   const { username } = useParams<{ username: string }>();
 
   const [profile, setProfile] = useState<ProfileType | null>(null);
-  const [articles, setArticles] = useState<Article[] | null>([]);
+  const [articles, setArticles] = useState<ArticleType[] | null>([]);
 
   useEffect(() => {
 
@@ -93,7 +93,7 @@ export default function Profile() {
                       <span>Read more...</span>
                       {article.tagList.length > 0 && (
                         <ul className="tag-list">
-                          {article.tagList.map(tag => (
+                          {article.tagList.map((tag:string) => (
                             <li className="tag-default tag-pill tag-outline" key={`${article.slug}-${tag}`}>
                               {tag}
                             </li>

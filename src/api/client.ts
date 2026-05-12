@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from "axios";
 import { http } from "./http";
-import type { ArticlesQuery, MultipleArticlesResponse, SingleProfileResponse } from "./types";
+import type { ArticlesQuery, MultipleArticlesResponse, SingleArticleResponse, SingleProfileResponse } from "./types";
 import { createApiClientError } from "./errors";
 
 export interface RequestOptions {
@@ -26,6 +26,10 @@ export const apiClient = {
     return request<MultipleArticlesResponse>("/articles", {
       params: query
     });
+  },
+
+  getArticle(slug: string): Promise<SingleArticleResponse> {
+    return request<SingleArticleResponse>(`/articles/${slug}`);
   },
 
   getProfile(username: string): Promise<SingleProfileResponse> {
