@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useAuth } from "./auth/AuthContext";
 
 type ActiveNav = "home" | "editor" | "settings" | "login" | "logout";
 
@@ -12,6 +13,8 @@ function getNavClass(activeNav: ActiveNav, item: ActiveNav): string {
 }
 
 export default function AppLayout({ children, activeNav = "home" }: AppLayoutProps) {
+
+  const { isAuthenticated } = useAuth();
 
   return (
     <>
@@ -39,21 +42,26 @@ export default function AppLayout({ children, activeNav = "home" }: AppLayoutPro
               </a>
             </li>
               <>
-                <li className="nav-item">
-                  <a className={getNavClass(activeNav, "logout")} href="/#/logout">
-                    Logout
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className={getNavClass(activeNav, "login")} href="/#/login">
-                    Sign in
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="/#/register">
-                    Sign up
-                  </a>
-                </li>
+                {isAuthenticated ? (
+                  <li className="nav-item">
+                    <a className={getNavClass(activeNav, "logout")} href="/#/logout">
+                      Logout
+                    </a>
+                  </li>
+                ) : (
+                  <>
+                    <li className="nav-item">
+                      <a className={getNavClass(activeNav, "login")} href="/#/login">
+                        Sign in
+                      </a>
+                    </li>
+                    <li className="nav-item">
+                      <a className="nav-link" href="/#/register">
+                        Sign up
+                      </a>
+                    </li>
+                  </>
+                )}
               </>
           </ul>
         </div>

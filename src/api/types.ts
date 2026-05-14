@@ -39,4 +39,15 @@ export interface ArticlesQuery {
   offset?: number;
 }
 
+export interface User {
+  email: string;
+  token: string;
+  username: string;
+  bio: string | null;
+  image: string | null;
+}
+
+export interface SingleUserResponse {
+  user: User;
+}
 

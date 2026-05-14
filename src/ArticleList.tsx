@@ -1,11 +1,11 @@
 import AppLayout from "./AppLayout";
 import { useEffect, useState } from "react";
 import { apiClient } from "./api/client";
-import { Article } from "./api/types";
+import { ArticleType } from "./api/types";
 import { formatPublicationDate, getAuthorImage } from "./utils/articlePresentation";
 
 export default function ArticleList() {
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [articles, setArticles] = useState<ArticleType[]>([]);
 
   useEffect(() => {
     apiClient

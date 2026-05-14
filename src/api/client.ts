@@ -1,6 +1,12 @@
 import { AxiosRequestConfig } from "axios";
 import { http } from "./http";
-import type { ArticlesQuery, MultipleArticlesResponse, SingleArticleResponse, SingleProfileResponse } from "./types";
+import type {
+  ArticlesQuery,
+  MultipleArticlesResponse,
+  SingleArticleResponse,
+  SingleProfileResponse,
+  SingleUserResponse,
+} from "./types";
 import { createApiClientError } from "./errors";
 
 export interface RequestOptions {
@@ -22,6 +28,15 @@ async function request<TResponse>(path: string, init: AxiosRequestConfig = {}): 
 }
 
 export const apiClient = {
+  login(email: string, password: string): Promise<SingleUserResponse> {
+    return request<SingleUserResponse>("/users/login", {
+      method: "POST",
+      data: {
+        user: { email, password },
+      },
+    });
+  },
+
   getArticles(query?: ArticlesQuery): Promise<MultipleArticlesResponse> {
     return request<MultipleArticlesResponse>("/articles", {
       params: query
@@ -34,5 +49,9 @@ export const apiClient = {
 
   getProfile(username: string): Promise<SingleProfileResponse> {
     return request<SingleProfileResponse>(`/profiles/${username}`);
-  }
+  },
+
+  getCurrentUser(options?: RequestOptions): Promise<SingleUserResponse> {
+    return request<SingleUserResponse>("/user", options);
+  },
 };
