@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { apiClient } from "./api/client";
 import { ArticleType } from "./api/types";
 import { formatPublicationDate, getAuthorImage } from "./utils/articlePresentation";
-import { useArticleListData } from "./hooks/useArticleData";
+import { useArticleListData } from "./hooks/useArticleListData";
 
 export default function ArticleList() {
   const {handleToggleFavorite, articles, isLoading, errorMessage} = useArticleListData();

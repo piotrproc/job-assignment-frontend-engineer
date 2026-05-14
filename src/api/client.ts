@@ -62,4 +62,12 @@ export const apiClient = {
   unfavoriteArticle(slug: string): Promise<SingleArticleResponse> {
     return request<SingleArticleResponse>(`/articles/${slug}/favorite`, { method: "DELETE" });
   },
+
+  followUser(username: string): Promise<SingleProfileResponse> {
+    return request<SingleProfileResponse>(`/profiles/${username}/follow`, { method: "POST" });
+  },
+
+  unfollowUser(username: string): Promise<SingleProfileResponse> {
+    return request<SingleProfileResponse>(`/profiles/${username}/follow`, { method: "DELETE" });
+  },
 };

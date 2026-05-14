@@ -4,21 +4,31 @@ import { useEffect, useState } from "react";
 import { apiClient } from "./api/client";
 import { ArticleType } from "./api/types";
 import { formatPublicationDate, getAuthorImage } from "./utils/articlePresentation";
+import { useArticleData } from "./hooks/useArticleData";
 
 export default function Article() {
   const { slug } = useParams<{ slug: string }>();
 
-  const [article, setArticle] = useState<ArticleType>();
+  const {
+    article,
+    isLoading,
+    errorMessage,
+    isFavoritePending,
+    isFollowPending,
+    isOwnArticle,
+    handleToggleFavorite,
+    handleToggleFollow,
+  } = useArticleData({
+    slug,
+  });
 
   console.log(slug);
 
-  useEffect(() => {
-    apiClient.getArticle(slug).then(response => {
-      setArticle(response.article);
-    });
-  }, [slug]);
-
   const profileHref = `/#/profile/${article?.author.username}`;
+  const shouldShowFollowButton = !isOwnArticle;
+  const followButtonClass = `btn btn-sm ${article?.author.following ? "btn-secondary" : "btn-outline-secondary"}`;
+  const favoriteButtonClass = `btn btn-sm ${article?.favorited ? "btn-primary" : "btn-outline-primary"}`;
+
 
   const renderArticleMeta = () => {
     return (
@@ -32,12 +42,16 @@ export default function Article() {
           </a>
           <span className="date">{formatPublicationDate(article ? article.createdAt : "")}</span>
         </div>
-        <button className="btn btn-sm btn-outline-secondary">
+        <button className={followButtonClass} type="button" onClick={handleToggleFollow}>
           <i className="ion-plus-round" />
           &nbsp; {article?.author.following ? "Following" : "Follow"} {article?.author.username}
         </button>
         &nbsp;&nbsp;
-        <button className="btn btn-sm btn-outline-primary">
+        <button
+          className={favoriteButtonClass}
+          type="button"
+          onClick={handleToggleFavorite}
+        >
           <i className="ion-heart" />
           &nbsp; Favorite Post <span className="counter">({article?.favoritesCount})</span>
         </button>
