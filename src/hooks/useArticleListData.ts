@@ -1,10 +1,7 @@
 import { useAuth } from "../auth/AuthContext";
 import { useOnUnauthorized } from "./useOnUnauthorized";
-import { apiClient } from "../api/client";
-import { toApiClientError } from "../api/errors";
-import { ArticleType } from "../api/types";
+import { apiClient, ArticleType, isRequestCanceled, toApiClientError } from "../api";
 import { useEffect, useState } from "react";
-import { isRequestCanceled } from "../api/http";
 
 interface UseArticleListDataResult {
   articles: ArticleType[];
@@ -63,8 +60,6 @@ export function useArticleListData(): UseArticleListDataResult {
       return;
     }
 
-    console.log("123");
-
     try {
       const response = article.favorited
         ? await apiClient.unfavoriteArticle(article.slug)
@@ -83,8 +78,6 @@ export function useArticleListData(): UseArticleListDataResult {
       }
     }
   };
-
-
 
   return {
     articles,
