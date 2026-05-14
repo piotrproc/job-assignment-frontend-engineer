@@ -9,11 +9,12 @@ import { useProfileData } from "./hooks/useProfileData";
 export default function Profile() {
   const { username } = useParams<{ username: string }>();
 
-  const [profile, setProfile] = useState<ProfileType | null>(null);
+  // const [profile, setProfile] = useState<ProfileType | null>(null);
 
   const isFavoritesTab = location.pathname.endsWith("/favorites");
 
   const {
+    profile,
     articles,
     isLoading,
     errorMessage,
@@ -27,15 +28,6 @@ export default function Profile() {
     isFavoritesTab,
   });
 
-  useEffect(() => {
-    apiClient.getProfile(username).then(
-      (response) => {
-        console.log(response.profile);
-        setProfile(response.profile);
-      }
-    );
-  }, [username]);
-
   return (
     <>
       <AppLayout activeNav="home">
@@ -47,7 +39,14 @@ export default function Profile() {
                   <img src={getAuthorImage(profile?.image ?? null)} className="user-img" alt={profile?.username}/>
                   <h4>{profile?.username}</h4>
                   <p>{profile?.bio ?? "No bio available."}</p>
-                  <button className="btn btn-sm btn-outline-secondary action-btn">
+                  <button
+                    className={`btn btn-sm action-btn ${
+                      profile?.following ? "btn-secondary" : "btn-outline-secondary"
+                    }`}
+                    type="button"
+                    onClick={handleToggleFollow}
+                    disabled={isFollowPending}
+                  >
                     <i className="ion-plus-round" />
                     &nbsp; {profile?.following ? "Following" : "Follow"} {profile?.username}
                   </button>
