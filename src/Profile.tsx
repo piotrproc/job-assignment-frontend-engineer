@@ -4,34 +4,37 @@ import { useEffect, useState } from "react";
 import { apiClient } from "./api/client";
 import { ArticleType, ProfileType } from "./api/types";
 import { formatPublicationDate, getAuthorImage } from "./utils/articlePresentation";
+import { useProfileData } from "./hooks/useProfileData";
 
 export default function Profile() {
   const { username } = useParams<{ username: string }>();
 
   const [profile, setProfile] = useState<ProfileType | null>(null);
-  const [articles, setArticles] = useState<ArticleType[] | null>([]);
+
+  const isFavoritesTab = location.pathname.endsWith("/favorites");
+
+  const {
+    articles,
+    isLoading,
+    errorMessage,
+    isFollowPending,
+    pendingFavoriteBySlug,
+    isOwnProfile,
+    handleToggleFollow,
+    handleToggleFavorite,
+  } = useProfileData({
+    username,
+    isFavoritesTab,
+  });
 
   useEffect(() => {
-
     apiClient.getProfile(username).then(
       (response) => {
         console.log(response.profile);
         setProfile(response.profile);
       }
     );
-
-  },[]);
-
-  useEffect(() => {
-    apiClient.getArticles({
-      limit: 20,
-      offset: 0,
-      author: username
-    }).then((response) => {
-      setArticles(response.articles);
-      console.log(response.articles);
-    })
-  }, []);
+  }, [username]);
 
   return (
     <>
@@ -83,7 +86,15 @@ export default function Profile() {
                         </a>
                         <span className="date">{formatPublicationDate(article.createdAt)}</span>
                       </div>
-                      <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                      <button
+                        className={`btn btn-sm pull-xs-right ${
+                          article.favorited ? "btn-primary" : "btn-outline-primary"
+                        }`}
+                        type="button"
+                        onClick={() => {
+                          handleToggleFavorite(article);
+                        }}
+                      >
                         <i className="ion-heart" /> {article.favoritesCount}
                       </button>
                     </div>
