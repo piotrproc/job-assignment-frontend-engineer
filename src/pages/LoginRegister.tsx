@@ -1,6 +1,6 @@
-import AppLayout from "./AppLayout";
+import AppLayout from "../components/AppLayout";
 import { FormEvent, useState } from "react";
-import { useAuth } from "./auth/AuthContext";
+import { useAuth } from "../auth/AuthContext";
 import { useHistory } from "react-router-dom";
 
 export default function LoginRegister() {

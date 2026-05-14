@@ -1,6 +1,6 @@
-import AppLayout from "./AppLayout";
+import AppLayout from "../components/AppLayout";
 import { useHistory } from "react-router-dom";
-import { useAuth } from "./auth/AuthContext";
+import { useAuth } from "../auth/AuthContext";
 import { useEffect } from "react";
 
 export default function Logout() {

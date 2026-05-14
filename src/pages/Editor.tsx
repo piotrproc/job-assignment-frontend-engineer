@@ -1,4 +1,4 @@
-import AppLayout from "./AppLayout";
+import AppLayout from "../components/AppLayout";
 import { ReactNode } from "react";
 
 export default function Editor() {

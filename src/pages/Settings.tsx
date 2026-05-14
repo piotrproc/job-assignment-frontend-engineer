@@ -1,4 +1,4 @@
-import AppLayout from "./AppLayout";
+import AppLayout from "../components/AppLayout";
 
 export default function Settings() {
   return (
@@ -31,7 +31,7 @@ export default function Settings() {
                   </fieldset>
                 </form>
                 <hr />
-                <a className="btn btn-outline-danger" href="/#/logout">
+                <a className="btn btn-outline-danger" href="/public#/logout">
                   Or click here to logout.
                 </a>
               </div>

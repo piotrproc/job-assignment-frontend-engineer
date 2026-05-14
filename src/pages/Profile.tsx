@@ -1,10 +1,10 @@
-import AppLayout from "./AppLayout";
+import AppLayout from "../components/AppLayout";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { apiClient } from "./api/client";
-import { ArticleType, ProfileType } from "./api/types";
-import { formatPublicationDate, getAuthorImage } from "./utils/articlePresentation";
-import { useProfileData } from "./hooks/useProfileData";
+import { apiClient } from "../api/client";
+import { ArticleType, ProfileType } from "../api/types";
+import { formatPublicationDate, getAuthorImage } from "../utils/articlePresentation";
+import { useProfileData } from "../hooks/useProfileData";
 
 export default function Profile() {
   const { username } = useParams<{ username: string }>();
@@ -76,7 +76,7 @@ export default function Profile() {
                 {articles ? articles.map(article => (
                   <div className="article-preview" key={article.slug}>
                     <div className="article-meta">
-                      <a href="/#/profile/albertpai">
+                      <a href="/public#/profile/albertpai">
                         <img src={getAuthorImage(article?.author.image ?? null)} />
                       </a>
                       <div className="info">

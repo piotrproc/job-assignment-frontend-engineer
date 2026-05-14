@@ -1,10 +1,10 @@
-import AppLayout from "./AppLayout";
+import AppLayout from "../components/AppLayout";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { apiClient } from "./api/client";
-import { ArticleType } from "./api/types";
-import { formatPublicationDate, getAuthorImage } from "./utils/articlePresentation";
-import { useArticleData } from "./hooks/useArticleData";
+import { apiClient } from "../api/client";
+import { ArticleType } from "../api/types";
+import { formatPublicationDate, getAuthorImage } from "../utils/articlePresentation";
+import { useArticleData } from "../hooks/useArticleData";
 
 export default function Article() {
   const { slug } = useParams<{ slug: string }>();
@@ -33,7 +33,7 @@ export default function Article() {
   const renderArticleMeta = () => {
     return (
       <div className="article-meta">
-        <a href="/#/profile/ericsimmons">
+        <a href="/public#/profile/ericsimmons">
           <img src={getAuthorImage(article?.author.image ?? null)} alt={article?.author.username} />
         </a>
         <div className="info">
@@ -102,11 +102,11 @@ export default function Article() {
                     <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
                   </div>
                   <div className="card-footer">
-                    <a href="/#/profile/jacobschmidt" className="comment-author">
+                    <a href="/public#/profile/jacobschmidt" className="comment-author">
                       <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
                     </a>
                     &nbsp;
-                    <a href="/#/profile/jacobschmidt" className="comment-author">
+                    <a href="/public#/profile/jacobschmidt" className="comment-author">
                       Jacob Schmidt
                     </a>
                     <span className="date-posted">Dec 29th</span>
@@ -118,11 +118,11 @@ export default function Article() {
                     <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
                   </div>
                   <div className="card-footer">
-                    <a href="/#/profile/jacobschmidt" className="comment-author">
+                    <a href="/public#/profile/jacobschmidt" className="comment-author">
                       <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
                     </a>
                     &nbsp;
-                    <a href="/#/profile/jacobschmidt" className="comment-author">
+                    <a href="/public#/profile/jacobschmidt" className="comment-author">
                       Jacob Schmidt
                     </a>
                     <span className="date-posted">Dec 29th</span>
