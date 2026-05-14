@@ -54,4 +54,12 @@ export const apiClient = {
   getCurrentUser(options?: RequestOptions): Promise<SingleUserResponse> {
     return request<SingleUserResponse>("/user", options);
   },
+
+  favoriteArticle(slug: string): Promise<SingleArticleResponse> {
+    return request<SingleArticleResponse>(`/articles/${slug}/favorite`, { method: "POST" });
+  },
+
+  unfavoriteArticle(slug: string): Promise<SingleArticleResponse> {
+    return request<SingleArticleResponse>(`/articles/${slug}/favorite`, { method: "DELETE" });
+  },
 };

@@ -1,4 +1,5 @@
 import AppLayout from "./AppLayout";
+import { ReactNode } from "react";
 
 export default function Editor() {
   return (

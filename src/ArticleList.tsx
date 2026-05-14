@@ -3,21 +3,10 @@ import { useEffect, useState } from "react";
 import { apiClient } from "./api/client";
 import { ArticleType } from "./api/types";
 import { formatPublicationDate, getAuthorImage } from "./utils/articlePresentation";
+import { useArticleListData } from "./hooks/useArticleData";
 
 export default function ArticleList() {
-  const [articles, setArticles] = useState<ArticleType[]>([]);
-
-  useEffect(() => {
-    apiClient
-      .getArticles()
-      .then(response => {
-        console.log(response.articles);
-        setArticles(response.articles);
-      })
-      .catch((error: unknown) => {
-        console.log(error);
-      });
-  }, []);
+  const {handleToggleFavorite, articles, isLoading, errorMessage} = useArticleListData();
 
   return (
     <>
@@ -61,7 +50,15 @@ export default function ArticleList() {
                             </a>
                             <span className="date">{formatPublicationDate(article.createdAt)}</span>
                           </div>
-                          <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                          <button
+                            className={`btn btn-sm pull-xs-right ${
+                              article.favorited ? "btn-primary" : "btn-outline-primary"
+                            }`}
+                            type="button"
+                            onClick={() => {
+                              handleToggleFavorite(article);
+                            }}
+                          >
                             <i className="ion-heart" /> {article.favoritesCount}
                           </button>
                         </div>
